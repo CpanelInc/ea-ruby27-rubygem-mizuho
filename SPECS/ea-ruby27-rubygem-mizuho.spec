@@ -39,8 +39,6 @@ Requires:      %{?scl_prefix}rubygem-nokogiri >= 1.4.0
 Requires:      %{?scl_prefix}rubygem(sqlite3)
 %{?scl:Requires:%scl_runtime}
 
-BuildRequires: tree
-
 BuildRequires: scl-utils
 BuildRequires: scl-utils-build
 %{?scl:BuildRequires: %{scl}-runtime}
