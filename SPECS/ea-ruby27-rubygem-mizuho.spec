@@ -23,6 +23,10 @@
 # https://github.com/FooBarWidget/mizuho/issues/5
 %global enable_tests 0
 
+%if 0%{?rhel} >= 8
+%global __python /usr/bin/python3
+%endif
+
 Summary:       Mizuho documentation formatting tool
 Name:          %{?scl:%scl_prefix}rubygem-%{gem_name}
 Version:       0.9.20
@@ -49,8 +53,10 @@ BuildRequires: %{?scl_prefix}rubygems-devel
 BuildRequires: python
 Requires: python
 %else
-BuildRequires: python36
-Requires: python36
+#BuildRequires: python36
+#Requires: python36
+BuildRequires: python2
+Requires: python2
 #BuildRequires: platform-python
 %endif
 
@@ -88,7 +94,7 @@ gem spec %{SOURCE0} -l --ruby > %{gem_name}.gemspec
 %patch1 -p 1
 
 %if 0%{?rhel} >= 8
-%patch2 -p 1
+#%patch2 -p 1
 %endif
 
 sed -i 's/NATIVELY_PACKAGED = .*/NATIVELY_PACKAGED = true/' lib/mizuho.rb
@@ -98,6 +104,8 @@ echo "#toc.html" >> templates/toc.html
 
 
 %build
+echo "python" %{__python3}
+
 %{?scl:scl enable %{scl} - << \EOF}
 gem build %{gem_name}.gemspec
 gem install \
@@ -111,7 +119,7 @@ gem install \
 
 %install
 %if 0%{?rhel} >= 8
-find . -name "*.py" -print | xargs sed -i '1s:^#!/usr/bin/env python$:#!/usr/bin/env python3:' 
+find . -name "*.py" -print | xargs sed -i '1s:^#!/usr/bin/env python$:#!/usr/bin/env python2:' 
 %endif
 
 mkdir -p %{buildroot}%{gem_dir}
