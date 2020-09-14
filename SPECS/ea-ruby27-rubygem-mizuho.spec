@@ -46,7 +46,6 @@ License:       MIT
 URL:           https://github.com/FooBarWidget/mizuho
 Source0:       https://rubygems.org/gems/%{gem_name}-%{version}.gem
 Patch1:        0001-Fix-native-templates-directory-path.patch
-Patch2:        0002-CentOS-8-requires-Python3.patch
 Requires:      %{?scl_prefix}ruby(rubygems)
 Requires:      %{?scl_prefix}ruby(release)
 Requires:      %{?scl_prefix}rubygem-nokogiri >= 1.4.0
