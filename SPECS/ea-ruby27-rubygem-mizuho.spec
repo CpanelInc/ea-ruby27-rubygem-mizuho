@@ -24,7 +24,17 @@
 %global enable_tests 0
 
 %if 0%{?rhel} >= 8
-%global __python /usr/bin/python3
+# NOTE: our macros.scl insists that I use python3.  Too much risk on the
+# scripts
+%global __os_install_post %{expand:
+    /usr/lib/rpm/brp-scl-compress %{_scl_root}
+    %{!?__debug_package:/usr/lib/rpm/brp-strip %{__strip}
+    /usr/lib/rpm/brp-strip-comment-note %{__strip} %{__objdump}
+    }
+    /usr/lib/rpm/brp-strip-static-archive %{__strip}
+    /usr/lib/rpm/brp-scl-python-bytecompile /usr/bin/python2 %{?_python_bytecompile_errors_terminate_build} %{_scl_root}
+    /usr/lib/rpm/brp-python-hardlink
+%{nil}}
 %endif
 
 Summary:       Mizuho documentation formatting tool
@@ -36,7 +46,6 @@ License:       MIT
 URL:           https://github.com/FooBarWidget/mizuho
 Source0:       https://rubygems.org/gems/%{gem_name}-%{version}.gem
 Patch1:        0001-Fix-native-templates-directory-path.patch
-Patch2:        0002-CentOS-8-requires-Python3.patch
 Requires:      %{?scl_prefix}ruby(rubygems)
 Requires:      %{?scl_prefix}ruby(release)
 Requires:      %{?scl_prefix}rubygem-nokogiri >= 1.4.0
@@ -92,10 +101,6 @@ gem spec %{SOURCE0} -l --ruby > %{gem_name}.gemspec
 %{?scl:EOF}
 
 %patch1 -p 1
-
-%if 0%{?rhel} >= 8
-#%patch2 -p 1
-%endif
 
 sed -i 's/NATIVELY_PACKAGED = .*/NATIVELY_PACKAGED = true/' lib/mizuho.rb
 
