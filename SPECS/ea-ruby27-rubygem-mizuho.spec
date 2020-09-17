@@ -118,51 +118,78 @@ gem install \
 %{?scl:EOF}
 
 %install
+%global gemsusr opt/cpanel/ea-ruby27/root/usr
+%global gemsmri %{gemsusr}/share/gems/gems/mizuho-%{version}
+%global gemsdoc %{gemsusr}/share/gems/doc/mizuho-%{version}
+
 %if 0%{?rhel} >= 8
 find . -name "*.py" -print | xargs sed -i '1s:^#!/usr/bin/env python$:#!/usr/bin/env python2:' 
 %endif
 
-mkdir -p %{buildroot}%{gem_dir}
-cp -a ./%{gem_dir}/* %{buildroot}%{gem_dir}/
+mkdir -p %{buildroot}/%{gemsmri}
+mkdir -p %{buildroot}/%{gemsdoc}
+mkdir -p %{buildroot}/%{gemsusr}/bin
 
-mkdir -p %{buildroot}%{_bindir}
-cp -a ./%{_bindir}/* %{buildroot}%{_bindir}
+cp -ar %{gemsmri}/* %{buildroot}/%{gemsmri}
+cp -ar %{gemsdoc}/* %{buildroot}/%{gemsdoc}
+cp -a   %{gemsusr}/bin/* %{buildroot}/%{gemsusr}/bin
 
-find %{buildroot}%{gem_instdir}/bin -type f | xargs chmod a+x
+find %{buildroot}/%{gemsusr}/bin -type f | xargs chmod a+x
 
 # Remove build leftovers.
-rm -rf %{buildroot}%{gem_instdir}/{.rvmrc,.document,.require_paths,.gitignore,.travis.yml,.rspec,.gemtest,.yard*}
-rm -rf %{buildroot}%{gem_instdir}/%{gem_name}.gemspec
+rm -rf %{buildroot}/%{gemsmri}/{.rvmrc,.document,.require_paths,.gitignore,.travis.yml,.rspec,.gemtest,.yard*}
 
 %if 0%{?enable_tests}
 %check
 echo "CHECK: 001"
-pushd %{buildroot}%{gem_instdir}
+pushd %{buildroot}/%{gemmri}
 ruby -Ilib -S rspec -f s -c test/*_spec.rb
 popd
 %endif
 
 %files
-%doc %{gem_instdir}/LICENSE.txt
-%dir %{gem_instdir}
+%dir /%{gemsmri}
+%doc /%{gemsmri}/LICENSE.txt
+/%{gemsmri}/*
+/%{gemsmri}/asciidoc/*
+/%{gemsmri}/asciidoc/dblatex/*
+/%{gemsmri}/asciidoc/doc/*
+/%{gemsmri}/asciidoc/docbook-xsl/*
+/%{gemsmri}/asciidoc/examples/website/*
+/%{gemsmri}/asciidoc/filters/code/*
+/%{gemsmri}/asciidoc/filters/graphviz/*
+/%{gemsmri}/asciidoc/filters/latex/*
+/%{gemsmri}/asciidoc/filters/music/*
+/%{gemsmri}/asciidoc/filters/source/*
+/%{gemsmri}/asciidoc/images/*
+/%{gemsmri}/asciidoc/images/icons/*
+/%{gemsmri}/asciidoc/images/icons/callouts/*
+/%{gemsmri}/asciidoc/javascripts/*
+/%{gemsmri}/asciidoc/stylesheets/*
+/%{gemsmri}/asciidoc/tests/*
+/%{gemsmri}/asciidoc/tests/data/*
+/%{gemsmri}/asciidoc/themes/flask/*
+/%{gemsmri}/asciidoc/themes/volnitsky/*
+/%{gemsmri}/asciidoc/vim/ftdetect/*
+/%{gemsmri}/asciidoc/vim/syntax/*
+/%{gemsmri}/bin/*
+/%{gemsmri}/debian.template/*
+/%{gemsmri}/lib/*
+/%{gemsmri}/lib/mizuho/*
+/%{gemsmri}/rpm/*
+/%{gemsmri}/source-highlight/*
+/%{gemsmri}/templates/*
 %{_bindir}/mizuho
 %{_bindir}/mizuho-asciidoc
-%{gem_instdir}/bin
-%{gem_instdir}/debian.template
-%{gem_instdir}/rpm
-%{gem_instdir}/source-highlight
-%{gem_instdir}/templates
-%{gem_instdir}/asciidoc
-%{gem_libdir}
-%exclude %{gem_cache}
-%{gem_spec}
+%exclude /%{gemsmri}/README.markdown
+%exclude /%{gemsmri}/Rakefile
+%exclude /%{gemsmri}/test/*
 
 %files doc
-%doc %{gem_instdir}/README.markdown
-%doc %{gem_dir}/doc
-%{gem_instdir}/Rakefile
-%{gem_instdir}/test
-
+%doc /%{gemsmri}/README.markdown
+%doc /%{gemsdoc}
+/%{gemsmri}/Rakefile
+/%{gemsmri}/test/*
 
 %changelog
 * Wed Sep 09 2020 Julian Brown <julian.brown@cpanel.net> - 0.9.20-1
