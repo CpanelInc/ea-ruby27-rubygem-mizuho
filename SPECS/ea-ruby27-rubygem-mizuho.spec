@@ -107,10 +107,7 @@ sed -i 's/NATIVELY_PACKAGED = .*/NATIVELY_PACKAGED = true/' lib/mizuho.rb
 # Fixup rpmlint failures
 echo "#toc.html" >> templates/toc.html
 
-
 %build
-echo "python" %{__python3}
-
 %{?scl:scl enable %{scl} - << \EOF}
 gem build %{gem_name}.gemspec
 gem install \
@@ -122,27 +119,38 @@ gem install \
         --backtrace ./%{gem_name}-%{version}.gem
 %{?scl:EOF}
 
+echo "FILELIST"
+find . -type f -print
+
 %install
+%global gemsbase opt/cpanel/ea-ruby27/root/usr/share/ruby/gems/ruby-%{ruby_version}
 %global gemsusr opt/cpanel/ea-ruby27/root/usr
 %global gemsmri %{gemsusr}/share/gems/gems/mizuho-%{version}
 %global gemsdoc %{gemsusr}/share/gems/doc/mizuho-%{version}
+
+%global gemsdir  %{gemsbase}/gems
+%global mizbase  %{gemsdir}/mizuho-%{version}
+%global mizdocs  %{gemsbase}/doc/mizuho-%{version}
 
 %if 0%{?rhel} >= 8
 find . -name "*.py" -print | xargs sed -i '1s:^#!/usr/bin/env python$:#!/usr/bin/env python2:' 
 %endif
 
-mkdir -p %{buildroot}/%{gemsmri}
-mkdir -p %{buildroot}/%{gemsdoc}
-mkdir -p %{buildroot}/%{gemsusr}/bin
+mkdir -p %{buildroot}/%{_bindir}
+mkdir -p %{buildroot}/%{mizbase}
+mkdir -p %{buildroot}/%{mizdocs}
+mkdir -p %{buildroot}/%{gemsbase}/specifications
+mkdir -p %{buildroot}/%{gemsbase}/doc/mizuho-%{version}
 
-cp -ar %{gemsmri}/* %{buildroot}/%{gemsmri}
-cp -ar %{gemsdoc}/* %{buildroot}/%{gemsdoc}
-cp -a   %{gemsusr}/bin/* %{buildroot}/%{gemsusr}/bin
+cp -ar %{gemsmri}/* %{buildroot}/%{mizbase}
+cp -a  %{gemsusr}/bin/* %{buildroot}%{_bindir}
+cp -a  %{gemsdoc}/* %{buildroot}/%{gemsbase}/doc/mizuho-%{version}
+cp -a  %{gemsusr}/share/gems/specifications/mizuho-%{version}.gemspec %{buildroot}/%{gemsbase}/specifications/%{gem_name}-%{version}.gemspec
 
-find %{buildroot}/%{gemsusr}/bin -type f | xargs chmod a+x
+find %{buildroot}/%{_bindir} -type f | xargs chmod a+x
 
 # Remove build leftovers.
-rm -rf %{buildroot}/%{gemsmri}/{.rvmrc,.document,.require_paths,.gitignore,.travis.yml,.rspec,.gemtest,.yard*}
+rm -rf %{buildroot}/%{mizbase}/{.rvmrc,.document,.require_paths,.gitignore,.travis.yml,.rspec,.gemtest,.yard*}
 
 %if 0%{?enable_tests}
 %check
@@ -153,48 +161,52 @@ popd
 %endif
 
 %files
-%dir /%{gemsmri}
-%doc /%{gemsmri}/LICENSE.txt
-/%{gemsmri}/*
-/%{gemsmri}/asciidoc/*
-/%{gemsmri}/asciidoc/dblatex/*
-/%{gemsmri}/asciidoc/doc/*
-/%{gemsmri}/asciidoc/docbook-xsl/*
-/%{gemsmri}/asciidoc/examples/website/*
-/%{gemsmri}/asciidoc/filters/code/*
-/%{gemsmri}/asciidoc/filters/graphviz/*
-/%{gemsmri}/asciidoc/filters/latex/*
-/%{gemsmri}/asciidoc/filters/music/*
-/%{gemsmri}/asciidoc/filters/source/*
-/%{gemsmri}/asciidoc/images/*
-/%{gemsmri}/asciidoc/images/icons/*
-/%{gemsmri}/asciidoc/images/icons/callouts/*
-/%{gemsmri}/asciidoc/javascripts/*
-/%{gemsmri}/asciidoc/stylesheets/*
-/%{gemsmri}/asciidoc/tests/*
-/%{gemsmri}/asciidoc/tests/data/*
-/%{gemsmri}/asciidoc/themes/flask/*
-/%{gemsmri}/asciidoc/themes/volnitsky/*
-/%{gemsmri}/asciidoc/vim/ftdetect/*
-/%{gemsmri}/asciidoc/vim/syntax/*
-/%{gemsmri}/bin/*
-/%{gemsmri}/debian.template/*
-/%{gemsmri}/lib/*
-/%{gemsmri}/lib/mizuho/*
-/%{gemsmri}/rpm/*
-/%{gemsmri}/source-highlight/*
-/%{gemsmri}/templates/*
+%dir /%{mizbase}
+%doc /%{mizbase}/LICENSE.txt
+/%{mizbase}/*
+/%{mizbase}/asciidoc/*
+/%{mizbase}/asciidoc/dblatex/*
+/%{mizbase}/asciidoc/doc/*
+/%{mizbase}/asciidoc/docbook-xsl/*
+/%{mizbase}/asciidoc/examples/website/*
+/%{mizbase}/asciidoc/filters/code/*
+/%{mizbase}/asciidoc/filters/graphviz/*
+/%{mizbase}/asciidoc/filters/latex/*
+/%{mizbase}/asciidoc/filters/music/*
+/%{mizbase}/asciidoc/filters/source/*
+/%{mizbase}/asciidoc/images/*
+/%{mizbase}/asciidoc/images/icons/*
+/%{mizbase}/asciidoc/images/icons/callouts/*
+/%{mizbase}/asciidoc/javascripts/*
+/%{mizbase}/asciidoc/stylesheets/*
+/%{mizbase}/asciidoc/tests/*
+/%{mizbase}/asciidoc/tests/data/*
+/%{mizbase}/asciidoc/themes/flask/*
+/%{mizbase}/asciidoc/themes/volnitsky/*
+/%{mizbase}/asciidoc/vim/ftdetect/*
+/%{mizbase}/asciidoc/vim/syntax/*
+/%{mizbase}/bin/*
+/%{mizbase}/debian.template/*
+/%{mizbase}/lib/*
+/%{mizbase}/lib/mizuho/*
+/%{mizbase}/rpm/*
+/%{mizbase}/source-highlight/*
+/%{mizbase}/templates/*
 %{_bindir}/mizuho
 %{_bindir}/mizuho-asciidoc
-%exclude /%{gemsmri}/README.markdown
-%exclude /%{gemsmri}/Rakefile
-%exclude /%{gemsmri}/test/*
+/%{gemsbase}/specifications/%{gem_name}-%{version}.gemspec
+%exclude /%{mizbase}/README.markdown
+%exclude /%{mizbase}/Rakefile
+%exclude /%{mizbase}/test/*
 
 %files doc
-%doc /%{gemsmri}/README.markdown
-%doc /%{gemsdoc}
-/%{gemsmri}/Rakefile
-/%{gemsmri}/test/*
+%doc /%{mizbase}/README.markdown
+%doc /%{gemsbase}/doc/mizuho-%{version}
+/%{mizbase}/Rakefile
+/%{mizbase}/test/*
+/%{gemsbase}/doc/mizuho-%{version}/*
+/%{gemsbase}/doc/mizuho-%{version}/*/*
+/%{gemsbase}/doc/mizuho-%{version}/*/*/*
 
 %changelog
 * Wed Sep 09 2020 Julian Brown <julian.brown@cpanel.net> - 0.9.20-1
