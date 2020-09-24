@@ -21,8 +21,8 @@ index e5a9552..21ce914 100644
 -		if File.exist?("/usr/share/mizuho/asciidoc")
 -			ASCIIDOC = ["/usr/bin/python", "/usr/share/mizuho/asciidoc/asciidoc.py"]
 +		TEMPLATES_DIR    = "/opt/cpanel/ea-ruby24/root/usr/share/gems/gems/mizuho-%s/templates" % (VERSION_STRING)
-+		if File.exist?("/opt/cpanel/ea-ruby24/root/usr/share/gems/gems/mizuho-0.9.20/asciidoc/asciidoc.py")
-+			ASCIIDOC = ["/usr/bin/python", "/opt/cpanel/ea-ruby24/root/usr/share/gems/gems/mizuho-0.9.20/asciidoc/asciidoc.py"]
++		if File.exist?("/opt/cpanel/ea-ruby24/root/usr/share/gems/gems/mizuho-%s/asciidoc/asciidoc.py" % (VERSION_STRING))
++			ASCIIDOC = ["/usr/bin/python", "/opt/cpanel/ea-ruby24/root/usr/share/gems/gems/mizuho-%s/asciidoc/asciidoc.py" % (VERSION_STRING)]
  		else
  			ASCIIDOC = "/usr/bin/asciidoc"
  		end
