@@ -103,6 +103,7 @@ gem spec %{SOURCE0} -l --ruby > %{gem_name}.gemspec
 %patch1 -p 1
 
 sed -i 's/NATIVELY_PACKAGED = .*/NATIVELY_PACKAGED = true/' lib/mizuho.rb
+sed -i "s/__REPLACE_WITH_RUBY_VERSION__/%{ruby_version}/" lib/mizuho.rb
 
 # Fixup rpmlint failures
 echo "#toc.html" >> templates/toc.html

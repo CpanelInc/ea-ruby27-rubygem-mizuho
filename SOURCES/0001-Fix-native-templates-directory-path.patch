@@ -1,26 +1,31 @@
-From 6e1d8d4b6fec6a37a6c4edb14dd6db5a42f0dbd6 Mon Sep 17 00:00:00 2001
+From 614ce5b570fdd405e2fdb11c37ed4251623e52e0 Mon Sep 17 00:00:00 2001
 From: Julian Brown <julian.brown@cpanel.net>
-Date: Tue, 29 Sep 2020 09:51:48 -0500
+Date: Tue, 29 Sep 2020 12:51:46 -0500
 Subject: [PATCH] rubygem-mizuho-0.9.20-fix_native_templates_dir
 
 ---
- lib/mizuho.rb | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ lib/mizuho.rb | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/lib/mizuho.rb b/lib/mizuho.rb
-index e5a9552..b72d44f 100644
+index e5a9552..f169624 100644
 --- a/lib/mizuho.rb
 +++ b/lib/mizuho.rb
-@@ -23,9 +23,9 @@ module Mizuho
+@@ -20,12 +20,14 @@
+ 
+ module Mizuho
+ 	VERSION_STRING    = "0.9.20"
++    RUBY_VERSION      = "__REPLACE_WITH_RUBY_VERSION__"
  	NATIVELY_PACKAGED = false
  
  	if NATIVELY_PACKAGED
 -		TEMPLATES_DIR    = "/usr/share/mizuho/templates"
 -		if File.exist?("/usr/share/mizuho/asciidoc")
 -			ASCIIDOC = ["/usr/bin/python", "/usr/share/mizuho/asciidoc/asciidoc.py"]
-+		TEMPLATES_DIR    = "/opt/cpanel/ea-ruby27/root/usr/share/gems/gems/mizuho-%s/templates" % (VERSION_STRING)
-+		if File.exist?("/opt/cpanel/ea-ruby27/root/usr/share/gems/gems/mizuho-%s/asciidoc/asciidoc.py" % (VERSION_STRING))
-+			ASCIIDOC = ["/usr/bin/python", "/opt/cpanel/ea-ruby27/root/usr/share/gems/gems/mizuho-%s/asciidoc/asciidoc.py" % (VERSION_STRING)]
++
++        TEMPLATES_DIR    = "/opt/cpanel/ea-ruby27/root/usr/share/ruby/gems/ruby-%s/gems/mizuho-%s/templates" % [RUBY_VERSION, VERSION_STRING]
++		if File.exist?("/opt/cpanel/ea-ruby27/root/usr/share/ruby/gems/ruby-%s/gems/mizuho-%s/asciidoc/asciidoc.py" % [RUBY_VERSION, VERSION_STRING])
++			ASCIIDOC = ["/usr/bin/python", "/opt/cpanel/ea-ruby27/root/usr/share/ruby/gems/ruby-%s/gems/mizuho-%s/asciidoc/asciidoc.py" % [RUBY_VERSION, VERSION_STRING]]
  		else
  			ASCIIDOC = "/usr/bin/asciidoc"
  		end
