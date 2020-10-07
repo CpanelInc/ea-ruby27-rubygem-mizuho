@@ -134,9 +134,6 @@ gem install \
 find . -name "*.py" -print | xargs sed -i '1s:^#!/usr/bin/env python$:#!/usr/bin/env python2:' 
 %endif
 
-echo "GEMSMRI"
-find %{gemsmri} -type f -print
-
 mkdir -p %{buildroot}/%{_bindir}
 mkdir -p %{buildroot}/%{mizbase}
 mkdir -p %{buildroot}/%{mizdocs}
@@ -146,31 +143,21 @@ mkdir -p %{buildroot}/%{gemsusr}/share/ruby/ruby-2.7.1/mizuho-%{version}
 mkdir -p %{buildroot}/%{gemsusr}/share/gems/specifications
 mkdir -p %{buildroot}/%{gemsmri}
 
-echo "CP: 001"
 cp -ar %{gemsmri}/* %{buildroot}/%{mizbase}
 cp -ar %{gemsmri}/* %{buildroot}/%{gemsmri}
-echo "CP: 002"
 cp -a  %{gemsusr}/bin/* %{buildroot}%{_bindir}
-echo "CP: 003"
 cp -a  %{gemsdoc}/* %{buildroot}/%{gemsbase}/doc/mizuho-%{version}
-echo "CP: 004"
 cp -a  %{gemsusr}/share/gems/specifications/mizuho-%{version}.gemspec %{buildroot}/%{gemsbase}/specifications/%{gem_name}-%{version}.gemspec
-echo "CP: 005"
 cp -a  %{gemsusr}/share/gems/specifications/mizuho-%{version}.gemspec %{buildroot}/%{gemsusr}/share/gems/specifications/%{gem_name}-%{version}.gemspec
-echo "CP: 006"
 cp -ar %{gemsmri}/* %{buildroot}/%{gemsusr}/share/ruby/ruby-2.7.1/mizuho-%{version}
-echo "CP: DONE"
 
 find %{buildroot}/%{_bindir} -type f | xargs chmod a+x
 
 # Remove build leftovers.
 rm -rf %{buildroot}/%{mizbase}/{.rvmrc,.document,.require_paths,.gitignore,.travis.yml,.rspec,.gemtest,.yard*}
 
-echo "MIZBASE" %{mizbase} %{gemsbase}
-
 %if 0%{?enable_tests}
 %check
-echo "CHECK: 001"
 pushd %{buildroot}/%{gemmri}
 ruby -Ilib -S rspec -f s -c test/*_spec.rb
 popd
