@@ -17,7 +17,7 @@
 %{?scl:%scl_package rubygem-%{gem_name}}
 
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4590 for more details
-%define release_prefix 1
+%define release_prefix 2
 
 # Although there are tests, they don't work yet
 # https://github.com/FooBarWidget/mizuho/issues/5
@@ -131,7 +131,7 @@ gem install \
 %global mizdocs  %{gemsbase}/doc/mizuho-%{version}
 
 %if 0%{?rhel} >= 8
-find . -name "*.py" -print | xargs sed -i '1s:^#!/usr/bin/env python$:#!/usr/bin/env python2:' 
+find . -name "*.py" -print | xargs sed -i '1s:^#!/usr/bin/env python$:#!/usr/bin/env python2:'
 %endif
 
 mkdir -p %{buildroot}/%{_bindir}
@@ -156,8 +156,8 @@ find %{buildroot}/%{_bindir} -type f | xargs chmod a+x
 # Remove build leftovers.
 rm -rf %{buildroot}/%{mizbase}/{.rvmrc,.document,.require_paths,.gitignore,.travis.yml,.rspec,.gemtest,.yard*}
 
-%if 0%{?enable_tests}
 %check
+%if 0%{?enable_tests}
 pushd %{buildroot}/%{gemmri}
 ruby -Ilib -S rspec -f s -c test/*_spec.rb
 popd
@@ -546,6 +546,9 @@ popd
 /%{mizbase}/asciidoc/doc/testasciidoc.txt
 
 %changelog
+* Wed Oct 21 2020 Daniel Muey <dan@cpanel.net> - 0.9.20-2
+- ZC-7497: do conditional inside %check
+
 * Wed Sep 09 2020 Julian Brown <julian.brown@cpanel.net> - 0.9.20-1
 - ZC-7512 - Initial package on Ruby2.7
 
