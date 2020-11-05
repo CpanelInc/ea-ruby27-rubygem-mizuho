@@ -46,6 +46,7 @@ License:       MIT
 URL:           https://github.com/FooBarWidget/mizuho
 Source0:       https://rubygems.org/gems/%{gem_name}-%{version}.gem
 Patch1:        0001-Fix-native-templates-directory-path.patch
+Patch2:        0002-Use-python2-on-C8.patch
 Requires:      %{?scl_prefix}ruby(rubygems)
 Requires:      %{?scl_prefix}ruby(release)
 Requires:      %{?scl_prefix}rubygem-nokogiri >= 1.4.0
@@ -101,6 +102,11 @@ gem spec %{SOURCE0} -l --ruby > %{gem_name}.gemspec
 %{?scl:EOF}
 
 %patch1 -p 1
+
+%if 0%{?rhel} >= 8
+# On C8 ruby internally is referring to /usr/bin/python, make it python2
+%patch2 -p 1
+%endif
 
 sed -i 's/NATIVELY_PACKAGED = .*/NATIVELY_PACKAGED = true/' lib/mizuho.rb
 sed -i "s/__REPLACE_WITH_RUBY_VERSION__/%{ruby_version}/" lib/mizuho.rb
