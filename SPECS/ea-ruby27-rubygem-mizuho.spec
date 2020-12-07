@@ -145,7 +145,6 @@ mkdir -p %{buildroot}/%{mizbase}
 mkdir -p %{buildroot}/%{mizdocs}
 mkdir -p %{buildroot}/%{gemsbase}/specifications
 mkdir -p %{buildroot}/%{gemsbase}/doc/mizuho-%{version}
-mkdir -p %{buildroot}/%{gemsusr}/share/ruby/ruby-2.7.1/mizuho-%{version}
 mkdir -p %{buildroot}/%{gemsusr}/share/gems/specifications
 mkdir -p %{buildroot}/%{gemsmri}
 
@@ -155,7 +154,6 @@ cp -a  %{gemsusr}/bin/* %{buildroot}%{_bindir}
 cp -a  %{gemsdoc}/* %{buildroot}/%{gemsbase}/doc/mizuho-%{version}
 cp -a  %{gemsusr}/share/gems/specifications/mizuho-%{version}.gemspec %{buildroot}/%{gemsbase}/specifications/%{gem_name}-%{version}.gemspec
 cp -a  %{gemsusr}/share/gems/specifications/mizuho-%{version}.gemspec %{buildroot}/%{gemsusr}/share/gems/specifications/%{gem_name}-%{version}.gemspec
-cp -ar %{gemsmri}/* %{buildroot}/%{gemsusr}/share/ruby/ruby-2.7.1/mizuho-%{version}
 
 find %{buildroot}/%{_bindir} -type f | xargs chmod a+x
 
@@ -505,7 +503,6 @@ popd
 /%{mizbase}/templates/topbar.css
 /%{mizbase}/templates/topbar.html
 /%{mizbase}/templates/topbar.js
-/%{gemsusr}/share/ruby/ruby-2.7.1/mizuho-%{version}
 /opt/cpanel/ea-ruby27/root/usr/share/gems/specifications/mizuho-%{version}.gemspec
 /%{gemsmri}
 
