@@ -4,8 +4,7 @@
 %global pkg ruby27
 %global gem_name mizuho
 
-# NOTE: I need the version, is there a better way?
-%global ruby_version 2.7.1
+%global ruby_version %(/opt/cpanel/ea-ruby27/root/usr/bin/ruby -e 'puts %RUBY_VERSION')
 
 # Force Software Collections on
 %global _scl_prefix %{ns_dir}
@@ -17,7 +16,7 @@
 %{?scl:%scl_package rubygem-%{gem_name}}
 
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4590 for more details
-%define release_prefix 2
+%define release_prefix 3
 
 # Although there are tests, they don't work yet
 # https://github.com/FooBarWidget/mizuho/issues/5
@@ -549,6 +548,9 @@ popd
 /%{mizbase}/asciidoc/doc/testasciidoc.txt
 
 %changelog
+* Tue Jun 29 2021 Julian Brown <julian.brown@cpanel.net> - 0.9.20-3
+- ZC-9033: provide reliable way to get the ruby_version
+
 * Wed Oct 21 2020 Daniel Muey <dan@cpanel.net> - 0.9.20-2
 - ZC-7497: do conditional inside %check
 
