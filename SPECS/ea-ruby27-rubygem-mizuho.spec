@@ -16,7 +16,7 @@
 %{?scl:%scl_package rubygem-%{gem_name}}
 
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4590 for more details
-%define release_prefix 6
+%define release_prefix 7
 
 # Although there are tests, they don't work yet
 # https://github.com/FooBarWidget/mizuho/issues/5
@@ -548,6 +548,9 @@ popd
 /%{mizbase}/asciidoc/doc/testasciidoc.txt
 
 %changelog
+* Tue Apr 12 2022 Cory McIntire <cory@cpanel.net> - 0.9.20-7
+- EA-10620: ea-ruby27 was updated from v2.7.5 to v2.7.6
+
 * Tue Dec 28 2021 Dan Muey <dan@cpanel.net> - 0.9.20-6
 - ZC-9589: Update DISABLE_BUILD to match OBS
 
