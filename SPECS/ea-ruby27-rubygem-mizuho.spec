@@ -16,7 +16,7 @@
 %{?scl:%scl_package rubygem-%{gem_name}}
 
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4590 for more details
-%define release_prefix 8
+%define release_prefix 9
 
 # Although there are tests, they don't work yet
 # https://github.com/FooBarWidget/mizuho/issues/5
@@ -548,6 +548,9 @@ popd
 /%{mizbase}/asciidoc/doc/testasciidoc.txt
 
 %changelog
+* Fri Mar 31 2023 Cory McIntire <cory@cpanel.net> - 0.9.20-9
+- EA-11327: ea-ruby27 was updated from v2.7.7 to v2.7.8
+
 * Thu Nov 24 2022 Travis Holloway <t.holloway@cpanel.net> - 0.9.20-8
 - EA-11073: ea-ruby27 was updated from v2.7.6 to v2.7.7
 
